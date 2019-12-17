@@ -9,6 +9,20 @@
   </div>
 </template>
 
+<script>
+export default {
+  watch : {
+    "$route" () {
+      const rName = this.$router.name;
+
+      if (rName === "list") {
+        console.log("changed to list view");
+      }
+    }
+  }
+}
+</script>
+
 <style>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
