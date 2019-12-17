@@ -10,7 +10,13 @@
 </template>
 
 <script>
+import getRequests from "./ajax/get-requests";
+
 export default {
+  created () {
+    const url = "http://localhost:3000/list-elements";
+    getRequests.getResouresNormal(url);    
+  },
   watch : {
     "$route" () {
       const rName = this.$router.name;
