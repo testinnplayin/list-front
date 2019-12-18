@@ -1,6 +1,6 @@
 <template>
-    <li>
-        {{el.name}}  {{el.prop1}} {{el.prop2}} {{el.prop3}} {{el.prop4}}
+    <li class="list-el">
+        <span>Name:</span> {{el.name}} Prop1: {{el.prop1}} {{el.prop2}} {{el.prop3}} {{el.prop4}}
     </li>
 </template>
 
@@ -18,3 +18,15 @@ export default {
     props : ["el", "ind", "stale", "totalLng"]
 }
 </script>
+
+<style>
+.list-el {
+    border: 0.5px solid #ccc;
+    padding: 20px;
+    margin: 15px 5px;
+}
+
+.list-el span {
+    font-weight: bold;
+}
+</style>

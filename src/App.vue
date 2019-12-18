@@ -22,11 +22,22 @@ export default {
 			stale : true
 		};
 	},
+	computed : {
+		sortedListElements () {
+			const listElements = this.listElements;
+
+			if (listElements) {
+				return listElements.sort((a, b) => {
+					return a.local_timestamp - b.local_timestamp;
+				});
+			}
+		}
+	},
 	created () {
 		const rName = this.$route.name;
 
 		if (rName === "list") {
-			console.log("!");
+			// console.log("!");
 			if (!window.indexedDB) {
 				console.warn("This browser does not support indexedDB!");
 			} else {
@@ -38,7 +49,6 @@ export default {
 		fetchState () {
 			repo.fetchState()
 				.then(oldData => {
-					// TODO: add timestamp here
 					console.log("arrival of oldData ", new Date());
 					this.listElements = oldData.listElements;
 
@@ -60,7 +70,6 @@ export default {
 		promptForSync () {
 			repo.syncWBack()
 				.then(newData => {
-					// TODO: add timestamp here
 					console.log("new data arrival timestamp ", new Date());
 					this.listElements = newData.listElements;
 					this.stale = newData.stale;

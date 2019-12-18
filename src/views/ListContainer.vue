@@ -1,7 +1,7 @@
 <template>
     <div v-if="isLoading">Loading...</div>
     <div v-else-if="!isLoading && listElements.length === 0">No data yet</div>
-    <ul v-else>
+    <ul v-else class="list-container">
         <list-element v-for="(el, index) of listElements"
             :el="el"
             :key="index"
@@ -40,3 +40,11 @@ export default {
     }
 }
 </script>
+
+<style>
+.list-container {
+    display: block;
+    list-style: none;
+    width: 80%;
+}
+</style>

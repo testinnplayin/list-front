@@ -47,21 +47,27 @@ export default {
     },
     setUpIDB () {
         const normalURL = "http://localhost:3000/list-elements";
-        if (!db) {
-            reject("Database not initialized!");
-        } else {
-            return new Promise((resolve, reject) => {
-                getRequests.getResourcesNormal(normalURL)
-                    .then(data => {
-                        return dbRequests.insertObjects(db, data.list_elements);
-                    })
-                    .then(() => {
-                        console.log("Database filled");
-                        resolve();
-                    })
-                    .catch(err => reject(err));
-            });
-        }
+        return new Promise((resolve, reject) => {
+            if (!db) {
+                reject("Database not initialized!");
+            } else {
+                
+                    getRequests.getResourcesNormal(normalURL)
+                        .then(data => {
+                            const internalModel = data.list_elements.map(obj => {
+                                obj.local_timestamp = new Date();
+                                return obj;
+                            });
+                            return dbRequests.insertObjects(db, internalModel);
+                        })
+                        .then(() => {
+                            console.log("Database filled");
+                            resolve();
+                        })
+                        .catch(err => reject(err));
+                
+            }
+        });
     },
     syncWBack () {
         const normalURL = "http://localhost:3000/list-elements";
