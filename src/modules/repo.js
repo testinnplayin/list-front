@@ -6,6 +6,8 @@ import getRequests from "../ajax/get-requests";
 
 let db;
 
+const baseUrl = "http://localhost:3000/list-elements";
+
 export default {
     fetchState () {
         return new Promise((resolve, reject) => {
@@ -46,31 +48,36 @@ export default {
         });
     },
     setUpIDB () {
-        const normalURL = "http://localhost:3000/list-elements";
+        const normalURL = baseUrl;
         return new Promise((resolve, reject) => {
             if (!db) {
                 reject("Database not initialized!");
             } else {
-                
-                    getRequests.getResourcesNormal(normalURL)
+                    getRequests.getStreamedResources(`${baseUrl}/stream`)
                         .then(data => {
-                            const internalModel = data.list_elements.map(obj => {
-                                obj.local_timestamp = new Date();
-                                return obj;
-                            });
-                            return dbRequests.insertObjects(db, internalModel);
-                        })
-                        .then(() => {
-                            console.log("Database filled");
-                            resolve();
+                            console.log(data);
+                            const arrOfJSON = data.split(", ");
+                            console.log(JSON.parse(arrOfJSON[0]));
                         })
                         .catch(err => reject(err));
-                
+                    // getRequests.getResourcesNormal(normalURL)
+                    //     .then(data => {
+                    //         const internalModel = data.list_elements.map(obj => {
+                    //             obj.local_timestamp = new Date();
+                    //             return obj;
+                    //         });
+                    //         return dbRequests.insertObjects(db, internalModel);
+                    //     })
+                    //     .then(() => {
+                    //         console.log("Database filled");
+                    //         resolve();
+                    //     })
+                    //     .catch(err => reject(err));
             }
         });
     },
     syncWBack () {
-        const normalURL = "http://localhost:3000/list-elements";
+        const normalURL = baseUrl;
 
         return new Promise((resolve, reject) => {
             if (!db) {

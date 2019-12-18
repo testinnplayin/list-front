@@ -37,7 +37,8 @@ export default {
 		const rName = this.$route.name;
 
 		if (rName === "list") {
-			// console.log("!");
+			console.log("!");
+
 			if (!window.indexedDB) {
 				console.warn("This browser does not support indexedDB!");
 			} else {
@@ -80,7 +81,7 @@ export default {
 			repo.setUpIDB()
 				.then(() => {
 					console.log("first write finished ", new Date());
-					this.fetchState();
+					// this.fetchState();
 				})
 				.catch(err => console.error(`Error while setting up object store ${err}`));
 		}
