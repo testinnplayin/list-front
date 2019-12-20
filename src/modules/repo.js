@@ -47,19 +47,29 @@ export default {
             };
         });
     },
+    promptForUpdating (data) {
+        return dbRequests.updateObjects(db, data);
+    },
     setUpIDB () {
-        const normalURL = baseUrl;
         return new Promise((resolve, reject) => {
             if (!db) {
                 reject("Database not initialized!");
             } else {
                     getRequests.getStreamedResources(`${baseUrl}/stream`)
                         .then(data => {
-                            console.log(data);
-                            const arrOfJSON = data.split(", ");
-                            console.log(JSON.parse(arrOfJSON[0]));
+                            let arrOfJSON = data.split(":::");
+                            arrOfJSON = arrOfJSON.slice(0, arrOfJSON.length - 1);
+                            return Promise.all(arrOfJSON.map(jsonObj => {
+                                const dataObj = JSON.parse(jsonObj);
+                                return dbRequests.insertObjects(db, dataObj);
+                            }));
+                        })
+                        .then(() => {
+                            console.log("Database filled");
+                            resolve();
                         })
                         .catch(err => reject(err));
+                    // NOTE: keep the following for further normal call test comparaisons
                     // getRequests.getResourcesNormal(normalURL)
                     //     .then(data => {
                     //         const internalModel = data.list_elements.map(obj => {

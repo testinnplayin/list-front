@@ -12,7 +12,6 @@ export default {
         return new Promise((resolve,reject) => {
             fetch(getReq)
                 .then(response => {
-                    console.log("normal response ", response);
                     if (!response.ok) {
                         throw new Error(response.statusText);
                     }
@@ -30,8 +29,6 @@ export default {
         const getReq = new Request(url, getOpts);
 
         return new Promise((resolve, reject) => {
-            // const decoder = new TextDecoder("utf-8");
-
             fetch(getReq)
                 .then(response => {
                     if (!response.ok) {
