@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import getRequests from "./ajax/get-requests";
 
 import repo from "./modules/repo";
@@ -18,27 +19,29 @@ export default {
 	name : "App",
 	data () {
 		return {
-			listElements : [],
+			// listElements : [],
 			stale : true
 		};
 	},
 	computed : {
-		sortedListElements () {
-			const listElements = this.listElements;
+		...mapGetters(["getListElements"]),
+		listElements () {
+			return this.$store.getters.getListElements;
+		},
+		// sortedListElements () {
+		// 	const listElements = this.listElements;
 
-			if (listElements) {
-				return listElements.sort((a, b) => {
-					return a.local_timestamp - b.local_timestamp;
-				});
-			}
-		}
+		// 	if (listElements) {
+		// 		return listElements.sort((a, b) => {
+		// 			return a.local_timestamp - b.local_timestamp;
+		// 		});
+		// 	}
+		// }
 	},
 	created () {
 		const rName = this.$route.name;
 
 		if (rName === "list") {
-			console.log("!");
-
 			if (!window.indexedDB) {
 				console.warn("This browser does not support indexedDB!");
 			} else {
@@ -47,11 +50,14 @@ export default {
 		}
 	},
 	methods : {
+		...mapActions(["syncWBack"]),
+		...mapMutations(["setOldListElements"]),
 		fetchState () {
 			repo.fetchState()
 				.then(oldData => {
 					console.log("arrival of oldData ", new Date());
-					this.listElements = oldData.listElements;
+					// this.listElements = oldData.listElements;
+					this.$store.commit("setOldListElements", oldData.listElements);
 
 					if (oldData.stale) {
 						this.promptForSync();
@@ -60,7 +66,6 @@ export default {
 				.catch(err => console.error(`Error while fetching data from iDB: ${err}`));
 		},
 		promptForInitialization () {
-			console.log("promptForInitialization");
 			repo.initializeDB()
 				.then(() => {
 					console.log("first write started ", new Date());
@@ -69,26 +74,27 @@ export default {
 				.catch(err => console.error("Error while initializing database ", err));
 		},
 		promptForSync () {
-			repo.syncWBack()
-				.then(newData => {
-					console.log("new data arrival timestamp ", new Date());
-					this.listElements = newData.listElements;
-					this.stale = newData.stale;
-				})
-				.catch(err => console.error(`Error while synching with back ${err}`));
+			this.syncWBack();
+			// repo.syncWBack()
+			// 	.then(newData => {
+			// 		console.log("new data arrival timestamp ", new Date());
+			// 		this.listElements = newData.listElements;
+			// 		this.stale = newData.stale;
+			// 	})
+			// 	.catch(err => console.error(`Error while synching with back ${err}`));
 		},
 		setUpIDB () {
 			repo.setUpIDB()
 				.then(() => {
 					console.log("first write finished ", new Date());
-					// this.fetchState();
+					this.fetchState();
 				})
 				.catch(err => console.error(`Error while setting up object store ${err}`));
 		}
 	},
 	watch : {
 		"$route" () {
-			const rName = this.$router.name;
+			const rName = this.$route.name;
 
 			if (rName === "list") {
 				console.log("changed to list view");
