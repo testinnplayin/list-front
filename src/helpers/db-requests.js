@@ -61,11 +61,27 @@ export default {
                 };
 
                 request.onsuccess = e => {
-                    if (i == lng) {
+                    if (i == lng - 1) {
                         resolve();
                     }
                 };
             }
+        });
+    },
+    updateObject(db, obj) {
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([oStoreName], "readwrite");
+            const objectStore = transaction.objectStore(oStoreName);
+
+            const request = objectStore.put(obj);
+
+            request.onerror = e => {
+                reject(e.target.errorCode);
+            };
+
+            request.onsuccess = e => {
+                resolve();
+            };
         });
     }
 };

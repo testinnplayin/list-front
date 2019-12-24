@@ -1,7 +1,8 @@
 <template>
     <div v-if="isLoading">Loading...</div>
     <div v-else-if="!isLoading && listElements.length === 0">No data yet</div>
-    <ul v-else class="list-container">
+    <ul v-else
+        class="list-container">
         <list-element v-for="(el, index) of listElements"
             :el="el"
             :key="index"
@@ -9,6 +10,7 @@
             :stale="stale"
             :total-lng="totalLng">
         </list-element>
+        <button @click="handleButtonClick" type="button">Bring In More</button>
     </ul>
 </template>
 
@@ -28,6 +30,11 @@ export default {
             return this.listElements.length;
         }
     },
+    methods : {
+        handleButtonClick () {
+            this.$emit("handleButtonClick");
+        }
+    },
     props : ["listElements", "stale"],
     watch : {
         listElements () {
@@ -45,6 +52,6 @@ export default {
 .list-container {
     display: block;
     list-style: none;
-    width: 80%;
+    width: 100%;
 }
 </style>

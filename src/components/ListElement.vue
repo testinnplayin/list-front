@@ -1,7 +1,10 @@
 <template>
-    <li class="list-el">
-        <span>Name:</span> {{el.name}} Prop1: {{el.prop1}} {{el.prop2}} {{el.prop3}} {{el.prop4}}
+    <li v-if="el && el.name" class="list-el">
+        <span>{{ind}}</span> <span>Name:</span> {{el.name}} <span>Prop1:</span> {{el.prop1}} <span>Prop2:</span> {{el.prop2}} <span>Prop3:</span>{{el.prop3}} <span>Prop4:</span> {{el.prop4}}
+        <br>
+        <span>{{el.createdAt}}</span>
     </li>
+    <li v-else>Loading....</li>
 </template>
 
 <script>
@@ -24,6 +27,7 @@ export default {
     border: 0.5px solid #ccc;
     padding: 20px;
     margin: 15px 5px;
+    width: 80%;
 }
 
 .list-el span {
